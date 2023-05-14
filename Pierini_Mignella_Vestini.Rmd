@@ -1,0 +1,735 @@
+---
+title: "Pierini Mignella Vestini HW1"
+output: html_document
+date: "2022-11-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+# libraries used in the homework
+library(purrr)
+library(jmuOutlier)
+```
+
+# Ex 1.
+
+Initializations:
+
+```{r}
+# reproducibility
+set.seed(13112221)
+# To save results (how much time) for each simulation size
+times <- matrix(data = NA, nrow=2, ncol=6)
+# True marginal PMF of T
+pT <- function(t)  1/(t*(t+1))
+# Sequence of time from 1 to 25 for the plots
+t_seq =  1:25
+```
+
+Main function:
+
+```{r}
+sim <- function(M){
+  # Get the M uniform samp
+  X = lapply(M, function(x) runif(x))
+  # Compute the geom on the X
+  Y = lapply(X, function(X) rgeom(length(X), X))
+  return (Y)
+}
+```
+
+For M = {100, 1000, 10000, 100000, 1000000, 10000000} we are going to do the 
+same simulation and check the results.
+
+```{r}
+# Simulation size
+M = 100
+# Save M
+times[1,1] = M
+# Initialize Y
+Y = rep(NA, M)
+# To compute how much time it takes
+beg <- Sys.time()
+# Find the geometric
+Y = sim(times[1,1])
+# And get the propotions
+p_hat <- proportions(table(Y))
+# Find and save how much time it takes
+fin <- Sys.time() - beg
+times[2,1] = fin
+print(fin)
+```
+
+```{r}
+# Plot of the True marginal PMF of T
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+M = 1000
+times[1,2] = M
+beg <- Sys.time()
+Y=sim(times[1,2])
+p_hat <- proportions(table(Y))
+fin <- Sys.time() - beg
+times[2,2] = fin
+print(fin)
+```
+
+```{r}
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+M = 10000
+times[1,3] = M
+beg <- Sys.time()
+Y <- sim(times[1,3])
+p_hat <- proportions(table(Y))
+fin <- Sys.time() - beg
+times[2,3] = fin
+print(fin)
+```
+
+```{r}
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+M = 100000
+times[1,4] = M
+beg <- Sys.time()
+Y <- sim(times[1,4])
+p_hat <- proportions(table(Y))
+fin <- Sys.time() - beg
+times[2,4] = fin
+print(fin)
+```
+
+```{r}
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+M =  1000000
+times[1,5] = M
+beg <- Sys.time()
+Y <- sim(times[1,5])
+p_hat <- proportions(table(Y))
+fin <- Sys.time() - beg
+times[2,5] = fin
+print(fin)
+```
+
+```{r}
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+M =  10000000
+times[1,6] = M
+beg <- Sys.time()
+Y <- sim(times[1,6])
+p_hat <- proportions(table(Y))
+fin <- Sys.time() - beg
+times[2,6] = fin
+print(fin)
+```
+
+```{r}
+plot(t_seq, pT(t_seq), 
+     type = "h",
+     lwd = 4,
+     col = rgb(0,0,0,.25),
+     ylab = expression(p[T]),
+     xlab = "t",
+     main = "Marginal of the Stopping Time",
+     sub = paste("Simulation size:", M))
+
+# Simulative approximation to the PMF of T
+points(t_seq, p_hat[t_seq], pch = 24, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+# Let's take a look at how much time it took for each M
+barplot(times[2,],names.arg = times[1,], main='Times comparison')
+```
+
+```{r}
+print('And in general the mean of the time is: ')
+t <- mean(times[2,])
+print(t)
+```
+
+We can notice that with the simulation size getting bigger and bigger the results
+are more and more accurate.
+
+# Ex 2.1 and 2.2
+
+Initalization:
+
+```{r}
+greco <- 0.7
+# simulation size
+M <- 1000
+integrals_p1 <- rep(NA,M)
+integrals_q1 <- rep(NA,M)
+integrals_p2 <- rep(NA,M)
+integrals_q2 <- rep(NA,M)
+compare_1 <- rep(NA,M)
+compare_2 <- rep(NA,M)
+```
+
+Main function:
+
+```{r}
+sim <- function(m, n, e, M){
+  # Initalization
+  A <- rep(NA, 6)
+  p_j = rep(0,m+2)
+  q_j = rep(0,m+2)
+  D_j = rep(NA,m)
+  
+  for(k in (1:M)){
+    # 2.1
+    
+    # Sample from the beta(10, 10)
+    X1 = rbeta(n,10,10)
+  
+    # Computing p_n,m:
+    
+    for (t in 2:m+1){
+      # Compute p_j_hat
+      p_j[t] = (sum(X1>((t-2)/m) & X1<=((t-1)/m))/n)
+    }
+    
+    # Step function for the histogram p_n,m
+    # Sequence of the extremes of the intervals that define the bins 
+    x <- seq(0,1, length.out = m+1)
+    # Our p_n,m
+    fun_p <- stepfun(x, p_j) 
+    
+    # Compute the integral of the squared error of p_X (true density) and p_n,m
+    integrals_p1[k] <- integrate(function(x) (dbeta(x,10,10)-(fun_p(x)*m))^2, 
+                                 0, 1, subdivisions = 2000)$value
+    
+    # Computing q_e,m:
+    
+    # Getting the sample for the Laplace distribution to privatize the data
+    v = rlaplace(m, 0, sqrt(8/(e^2)))
+    
+    for (t in 1:m){
+      # Compute D_j_tilde
+      D_j[t] = max((p_j[t+1]*n)+v[t],0)
+    }
+    D = sum(D_j)
+    
+    for (t in 2:m+1){
+      # Normalize the D_j_tilde in order to compute q_j_hat
+      q_j[t] = D_j[t-1]/D
+    }
+    
+    # Step function for the histogram q_e,m using the previous 
+    # extremes of the bins
+    fun_q <- stepfun(x,q_j) 
+    
+    # Compute the integral of the squared error of p_X (true density) and q_e,m  
+    integrals_q1[k] <- integrate(function(x) (dbeta(x,10,10)-(fun_q(x)*m))^2, 
+                                 0, 1, subdivisions = 2000)$value
+    
+    # Compute the integrals of the squared error 
+    # between the two histograms p_m,n and q_e,m
+    compare_1[k] <- integrate(function(x) (fun_p(x)*m-fun_q(x)*m)^2, 
+                              0, 1, subdivisions = 2000)$value
+    
+    
+    
+    # 2.2
+    
+    # Sample from the mixture of beta(10,3) and beta(3,10) and to do that
+    
+    # We take the Bernoulli of probability p-greco 
+    samp <- rbernoulli(n, p = greco)
+    # Then take as many samples from beta(10, 3) 
+    # as the True values from the Bernoulli
+    x1 <- rbeta(sum(samp==T), 10, 3)
+    # And beta(3, 10) as many as the False values 
+    x2 <- rbeta(sum(samp==F), 3, 10)
+    # To finish it we concatenate them together
+    X2 <- c(x1, x2)
+    
+    # Then we follow the same steps as the previous point
+    
+    for (t in 2:m+1){
+      p_j[t] = (sum(X2>((t-2)/m) & X2<=((t-1)/m))/n)
+    }
+    
+    x <- seq(0, 1, length.out = m+1)
+    fun_p <- stepfun(x,p_j) 
+    
+    integrals_p2[k] <- integrate(
+      function(x) (greco*dbeta(x, 10, 3) + (1-greco)*dbeta(x, 3, 10)-(fun_p(x)*m))^2, 
+      0, 1, subdivisions = 2000)$value
+    
+    v = rlaplace(m, 0, sqrt(8/(e^2)))
+    
+    for (t in 1:m){
+      D_j[t] = max((p_j[t+1]*n)+v[t],0)
+    }
+    D = sum(D_j)
+    
+    for (t in 2:m+1){
+      
+      q_j[t] = D_j[t-1]/D
+    }
+    
+    fun_q <- stepfun(x,q_j) 
+    integrals_q2[k] <- integrate(
+      function(x) (greco*dbeta(x, 10, 3) + (1-greco)*dbeta(x, 3, 10)-(fun_q(x)*m))^2, 
+      0, 1, subdivisions = 2000)$value
+    
+    compare_2[k] <- integrate(function(x) (fun_p(x)*m-fun_q(x)*m)^2, 
+                              0, 1, subdivisions = 2000)$value
+    
+  }
+  # Save the mean value of each integral 
+  A[1] = mean(compare_1)
+  A[2] = mean(integrals_p1)
+  A[3] = mean(integrals_q1)
+  
+  A[4] = mean(compare_2)
+  A[5] = mean(integrals_p2)
+  A[6] = mean(integrals_q2)
+  
+  # And return the results
+  return(A)
+}
+
+```
+
+Now we are going to call the function with n = {100, 1000}, e = {0.1, 0.01}, and
+m = grid([5,50])
+
+```{r}
+e <- 0.1
+n <- 100
+Mise <- rep(NA, 6)
+for(i in 5:50){ 
+  Mise[i-4] = lapply(i, function(x) sim(x, n=n, e=e, M=M))
+}
+# Save the results in a 6 by 46 matrix
+Mise <- matrix(unlist(Mise), nrow= 6, byrow = F)
+```
+
+Plot the results:
+
+```{r}
+par(mfrow=c(1,3))
+
+# Plot both the mise between p_X and both q_e,m (darkgreen) 
+#and p_n,m (purple) for the beta(10,10)
+matplot(Mise[2,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Beta(10,10)', col= 'purple', ylab = '')
+matplot(Mise[3,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+# Plot both the mise between p_X and both q_e,m (darkgreen)
+# and p_n,m (purple) for the mixture distribution
+matplot(Mise[5,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Mixture Beta(3,10), Beta(10, 3)', col= 'purple',  ylab = '')
+matplot(Mise[6,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+# Plot both the mise(q_e,m and p_n,m) for the beta(10,10) (purple)
+# and the mixture (darkgreen) 
+matplot(Mise[1,], type = 'l', lwd=3, ylim= c(0,5), 
+        main='Mise(p_nm, q_em)', col= 'purple',  ylab = '')
+matplot(Mise[4,], type = 'l', lwd=3, add=T, col='darkgreen')
+mtext('n = 100, e = 0.1 and simulation size M = 1000', side=3, outer=TRUE, line=-37)
+```
+
+Now we repeat the same for all the combinations of n and e.
+
+```{r}
+e <- 0.01
+n <- 100
+Mise <- rep(NA, 6)
+for(i in 5:50){ 
+  Mise[i-4] = lapply(i, function(x) sim(x, n=n, e=e, M=M))
+}
+Mise <- matrix(unlist(Mise), nrow= 6, byrow = F)
+```
+
+
+```{r}
+par(mfrow=c(1,3))
+matplot(Mise[2,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Beta(10,10)', col= 'purple', ylab = '')
+matplot(Mise[3,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[5,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Mixture Beta(3,10), Beta(10, 3)', col= 'purple',  ylab = '')
+matplot(Mise[6,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[1,], type = 'l', lwd=3, ylim= c(0,5), 
+        main='Mise(p_nm, q_em)', col= 'purple',  ylab = '')
+matplot(Mise[4,], type = 'l', lwd=3, add=T, col='darkgreen')
+mtext('n = 100, e = 0.01 and simulation size M = 1000', side=3, outer=TRUE, line=-37)
+```
+
+```{r}
+e <- 0.1
+n <- 1000
+Mise <- rep(NA, 6)
+for(i in 5:50){ 
+  Mise[i-4] = lapply(i, function(x) sim(x, n=n, e=e, M=M))
+}
+Mise <- matrix(unlist(Mise), nrow= 6, byrow = F)
+```
+
+
+```{r}
+par(mfrow=c(1,3))
+matplot(Mise[2,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Beta(10,10)', col= 'purple', ylab = '')
+matplot(Mise[3,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[5,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Mixture Beta(3,10), Beta(10, 3)', col= 'purple',  ylab = '')
+matplot(Mise[6,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[1,], type = 'l', lwd=3, ylim= c(0,5), 
+        main='Mise(p_nm, q_em)', col= 'purple',  ylab = '')
+matplot(Mise[4,], type = 'l', lwd=3, add=T, col='darkgreen')
+mtext('n = 1000, e = 0.1 and simulation size M = 1000', side=3, outer=TRUE, line=-37)
+```
+
+```{r}
+e <- 0.01
+n <- 1000
+Mise <- rep(NA, 6)
+for(i in 5:50){ 
+  Mise[i-4] = lapply(i, function(x) sim(x, n=n, e=e, M=M))
+}
+Mise <- matrix(unlist(Mise), nrow= 6, byrow = F)
+```
+
+
+```{r}
+par(mfrow=c(1,3))
+matplot(Mise[2,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Beta(10,10)', col= 'purple', ylab = '')
+matplot(Mise[3,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[5,], type = 'l', lwd=3, ylim= c(0,5),
+        main='Mixture Beta(3,10), Beta(10, 3)', col= 'purple',  ylab = '')
+matplot(Mise[6,], type = 'l', lwd=3, add=T, col='darkgreen')
+
+matplot(Mise[1,], type = 'l', lwd=3, ylim= c(0,5), 
+        main='Mise(p_nm, q_em)', col= 'purple',  ylab = '')
+matplot(Mise[4,], type = 'l', lwd=3, add=T, col='darkgreen')
+mtext('n = 1000, e = 0.01 and simulation size M = 1000', side=3, outer=TRUE, line=-37)
+```
+
+By looking at the plots we can notice:\n
+1. That increasing the number bins we have more information loss.\n
+2. A trend of the perturbed histogram of the 
+mixture model to be closer to the True density distribution, this can be also 
+noticed in the case of the MISE(p_n,m , q_e,m). So being the distance less, in the case of mixture model, we can assume that 
+less informations get lost in this case. 
+
+
+# Ex 2.3
+
+For our sample we asked people how many minutes the spend on social networks 
+daily.\n
+We ended up with a data collection of 104 responses.
+
+```{r}
+# Load the data
+data <- read.csv("C:\\Users\\user\\Documents\\MAGISTRALE\\SDS\\Homeworks\\HW1\\SDS1.csv")
+# Save the data in a matrix
+data <- matrix(unlist(data), nrow= 1, byrow = F)
+# The max of the data
+max <- max(data)
+# Normalize the data
+data <- data/max(data)
+```
+
+The main function: \n\n
+(Repeat the same steps as the perturbed histogram in 2.1/2.2 but on our dataset.)
+
+```{r}
+Sim <- function(m, k, e){
+  # Some initializations
+  n <- length(data)
+  # Number of bins
+  D <- rep(0,m)
+  n_hat <- rep(0, m+2)
+  q <- rep(0, m+2)
+  
+  # Count how many elements are in each bin
+  n_hat <- data.frame(table(cut(data, breaks = seq(min(data), max(data),
+                          length.out = m+1),include.lowest = T)))[,2]
+  
+  # To compute the perturbed histogram
+  v = rlaplace(m, 0, sqrt(8/(e^2)))
+  
+  for (t in 1:m){
+    # Compute D_j_tilde
+    D[t] = max(n_hat[t]+v[t],0)
+  }
+  for(t in 2:m+1){
+    # Compute q_j_hat
+    q[t] <- D[t]/sum(D)
+  }
+  
+  # define the stepfunction for the histogram, with the extremes of the bins:
+  x <- seq(min(data), max(data), length.out = m+1)
+  q_fun <- stepfun(x,q*m)
+  curve(q_fun(x), 0, 1, xlim = c(0,1), main='Histogram q_m,e', ylab = '')
+
+  # Get a sample using the privatized histogram as distribution
+  my_vec <- runif(1000000)
+  # Get a sample of size k
+  samp_Z <- sample(my_vec, size = k, replace = T, prob = q_fun(my_vec))
+  
+  return(samp_Z)
+}
+```
+
+Let's try with different values of k = {25, 50, 75, 100}, e ={0.01} and m={20}.\n
+First we will change the value of m:
+
+```{r}
+k <- 25
+m <- 20
+e <- 0.01
+
+# Get a sample of size k from the simulation function
+samp_Z <- Sim(m, k, e)
+# Go back to the original scale
+samp_Z <- samp_Z*max
+# Show the sample
+hist(samp_Z, breaks = m, xlim = c(0,max), 
+     main = 'Sample from the privatized dataset \nk=25, m=20, e=0.01', 
+     xlab = 'Number of minutes')
+```
+```{r}
+cat('And we have that the mean and the standard deviation before the privatization:\n'
+    , mean(data*max), sd(data*max), '\nAfter:\n',mean(samp_Z), sd(samp_Z))
+```
+
+```{r}
+k <- 50
+m <- 20
+e <- 0.01
+
+# Get a sample of size k from the simulation function
+samp_Z <- Sim(m, k, e)
+# Go back to the original scale
+samp_Z <- samp_Z*max
+# Show the sample
+hist(samp_Z, breaks = m, xlim = c(0,max), 
+     main = 'Sample from the privatized dataset \nk=50, m=20, e=0.01', 
+     xlab = 'Number of minutes')
+```
+```{r}
+cat('And we have that the mean and the standard deviation before the privatization was:\n'
+    , mean(data*max), sd(data*max), 
+    '\nAfter:\n',mean(samp_Z), sd(samp_Z))
+```
+
+```{r}
+k <- 75
+m <- 20
+e <- 0.01
+
+# Get a sample of size k from the simulation function
+samp_Z <- Sim(m, k, e)
+# Go back to the original scale
+samp_Z <- samp_Z*max
+# Show the sample
+hist(samp_Z, breaks = m, xlim = c(0,max), 
+     main = 'Sample from the privatized dataset \nk=75, m=20, e=0.01', 
+     xlab = 'Number of minutes')
+```
+```{r}
+cat('And we have that the mean and the standard deviation before the privatization:\n'
+    , mean(data*max), sd(data*max), 
+    '\nAfter:\n', mean(samp_Z), sd(samp_Z))
+```
+
+```{r}
+k <- 100
+m <- 20
+e <- 0.01
+
+# Get a sample of size k from the simulation function
+samp_Z <- Sim(m, k, e)
+# Go back to the original scale
+samp_Z <- samp_Z*max
+# Show the sample
+hist(samp_Z, breaks = m, xlim = c(0,max), 
+     main = 'Sample from the privatized dataset \nk=100, m=20, e=0.01', 
+     xlab = 'Number of minutes')
+```
+```{r}
+cat('And we have that the mean and the standard deviation before the privatization:\n'
+    , mean(data*max), sd(data*max), 
+    '\nAfter:\n',mean(samp_Z), sd(samp_Z))
+```
+
+As for our decisions we chose:\n
+- e = 0.01, because from the previous point we saw that it ensure a better privatization.\n
+- m = 20, because we found it to be the best number or bins to rapresent our data. And because we noticed before that there is more information loss with increasing the number of bins. \n
+- k in {25, 50, 75, 100}, to show how the results change with it.\n
+
+# Ex 2.4 (bonus)
+
+Initialization
+```{r}
+n <- 1000
+M <- 10000
+m <- 30
+e <- 0.1
+p_j1 = rep(0,m+2)
+q_j1 = rep(0,m+2)
+p_j2 = rep(0,m+2)
+q_j2 = rep(0,m+2)
+D_j1 = rep(0,m)
+D_j2 = rep(0,m)
+MAX <- rep(NA, M)
+  
+```
+
+
+```{r}
+for(k in (1:M)){
+
+  # n-1 elements that are going to be the same for both datasets
+  X = rbeta(n-1, 10, 10)
+  
+  # Add the different value in the datasets
+  X1 = c(X, rbeta(1, 10, 10))
+  X2 = c(X, rbeta(1, 10, 10))
+  
+  # Follow the same steps as the previous point to make the privitized histograms
+  
+  for(t in 2:m+1){
+    p_j1[t] = (sum(X1>((t-2)/m) & X1<=((t-1)/m))/n)
+    p_j2[t] = (sum(X2>((t-2)/m) & X2<=((t-1)/m))/n)
+  }
+  
+  # integral q_e,m 
+  v = rlaplace(m, 0, sqrt(8/(e^2)))
+  
+  for (t in 1:m){
+    D_j1[t] = max((p_j1[t+1]*n)+v[t],0)
+    D_j2[t] = max((p_j2[t+1]*n)+v[t],0)
+  }
+  
+  D1 = sum(D_j1)
+  D2 = sum(D_j2)
+  
+  for (t in 2:m+1){
+    if(D1){
+      q_j1[t] = m*D_j1[t-1]/D1
+    }
+    if(D2){
+      q_j2[t] = m*D_j2[t-1]/D2
+    }
+  }
+  
+  # Find the CDF for the distributions
+  fun_q1 <- ecdf(q_j1) 
+  fun_q2 <- ecdf(q_j2) 
+  
+  # Find the points for the evaluation of the CDFs
+  x <- seq(0, 1, length.out = m+1)
+  
+  # find the max value of the division
+  max = 0
+  for(i in (1:m)){
+    a = (x[i+1]+x[i])/2
+    if(fun_q2(a)!=0){
+      if((fun_q1(a)/fun_q2(a)) > max){
+        max = fun_q1(a)/fun_q2(a)
+      }
+    }else if(fun_q1(a) & 1 > max){
+      max = 1
+    }
+  }
+  # Save the max
+  MAX[k] <- max
+}
+
+# Plot the line exp(e)
+f<-function(x){
+  return(rep(exp(e),length(x)))
+}
+curve(f(x), seq(0,M, by=0.001) , lwd = 4, ylim=c(0.8,2), 
+      col = rgb(.85, .32, .73,.75), M)
+
+# Add the MAX to the plot
+points(1:M, MAX[1:M], pch = 1, 
+       col = "black", bg = "yellow", cex = .7)
+```
+
+```{r}
+cat('As we can see e-private property seems to be verified.\nWe have that, out of the', M, 'experitments, only', sum(MAX>exp(e))/M*100,'% of the values are over exp(e).')
+```
+
