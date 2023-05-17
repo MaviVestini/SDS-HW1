@@ -1,6 +1,6 @@
 # SDS-HW1
 
-My personal repository for the first group homework for the *Statistical Methods for Data Science* course in *Sapienza University*.
+Repository for the first group homework for the *Statistical Methods for Data Science* course in *Sapienza University*.
 
 # Content
 
